@@ -7,7 +7,7 @@ from fastapi.security import HTTPBearer
 from core.config import settings
 
 from .auth import router as auth_router
-from .users import router as users_router
+from api.api_v1.auth.users import router as users_router
 from .messages import router as messages_router
 
 http_bearer = HTTPBearer(auto_error=False)
