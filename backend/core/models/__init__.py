@@ -1,11 +1,13 @@
 __all__ = (
-    "db_helper",
     "Base",
     "User",
-    "AccessToken"
+    "AccessToken",
+    "db_helper",
+    "Post"
 )
 
-from utils.db_helper import db_helper
 from .base import Base
 from .access_token import AccessToken
+from .services import db_helper
 from .user import User
+from .post import Post

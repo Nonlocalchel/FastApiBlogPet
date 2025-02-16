@@ -6,8 +6,8 @@ from typing import (
 from fastapi import Depends
 
 from core.models import (
-    db_helper,
     AccessToken,
+    db_helper
 )
 
 if TYPE_CHECKING:
