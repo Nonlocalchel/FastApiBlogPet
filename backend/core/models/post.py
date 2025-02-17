@@ -11,7 +11,7 @@ class Post(Base, IntIdPkMixin):
     title = Column(String)
     text = Column(String(350))
     date = Column(DateTime(timezone=True), server_default=sql.func.now())
-    user: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user = Column(Integer, ForeignKey("users.id"))
     user_id = relationship("User")
 
 
