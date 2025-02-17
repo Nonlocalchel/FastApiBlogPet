@@ -29,7 +29,7 @@ class PostSingle(PostList):
 
 
 class PostCreate(PostBase):
-    # parent_id: Optional[int] = None
+    parent_id: Optional[int] = None
 
     class Config:
         from_attributes = True
