@@ -1,16 +1,23 @@
 from typing import List, Annotated
 
+
 from fastapi import APIRouter, Depends
+from fastapi.security import HTTPBearer
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from api.api_v1.auth.fastapi_users import current_active_user, current_active_superuser
 from core.config import settings
-from core.models import db_helper
+from core.models import db_helper, User
 from core.schemas.post import PostList, PostCreate, PostSingle
 from crud import posts as posts_services
+
+# http_bearer = HTTPBearer(auto_error=False)
 
 router = APIRouter(
     prefix=settings.api.v1.posts,
     tags=["Posts"],
+    # dependencies=[Depends(http_bearer)],
 )
 
 
@@ -32,7 +39,8 @@ async def create_post(
             AsyncSession,
             Depends(db_helper.session_getter),
         ],
-        post_create: PostCreate
+        post_create: PostCreate,
+        user: User = Depends(current_active_user)
 ):
     user = await posts_services.create_post(
         session=session,
