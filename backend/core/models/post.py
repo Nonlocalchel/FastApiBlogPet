@@ -1,11 +1,11 @@
-from sqlalchemy import Column, String, Integer, sql, ForeignKey, DateTime, sql
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, sql
+from sqlalchemy.orm import relationship
 
 from core.models import Base
 from core.models.mixins.int_id_pk import IntIdPkMixin
 
 
-class Post(Base, IntIdPkMixin):
+class Post(Base):
     __tablename__ = "microblog_posts"
 
     title = Column(String)

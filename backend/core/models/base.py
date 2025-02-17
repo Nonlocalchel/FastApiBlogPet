@@ -1,5 +1,5 @@
 from sqlalchemy import MetaData
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from sqlalchemy.orm import declared_attr
 
@@ -8,6 +8,7 @@ from utils import camel_case_to_snake_case
 
 
 class Base(DeclarativeBase):
+    id: Mapped[int] = mapped_column(primary_key=True)
     __abstract__ = True
 
     metadata = MetaData(
