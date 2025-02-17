@@ -13,7 +13,7 @@ class Post(Base):
     user = Column(Integer, ForeignKey("users.id"))
     user_id = relationship("User")
     parent_id = Column(Integer, ForeignKey('microblog_posts.id'), nullable=True)
-    parent = relationship("Post", remote_side="Post.id", backref=backref("children"))
+    children = relationship("Post", remote_side="Post.id", backref="parent", lazy="subquery")
 
 
 posts = Post.__table__

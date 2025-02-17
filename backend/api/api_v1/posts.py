@@ -1,7 +1,6 @@
 from typing import List, Annotated
 
-
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.api_v1.auth.fastapi_users import current_active_user
@@ -9,7 +8,6 @@ from core.config import settings
 from core.models import db_helper, User
 from core.schemas.post import PostList, PostCreate, PostSingle
 from crud import posts as posts_services
-
 
 router = APIRouter(
     prefix=settings.api.v1.posts,
@@ -29,6 +27,20 @@ async def get_posts(
     return users
 
 
+@router.get("/{pk}", response_model=PostSingle)
+async def post_single(
+        session: Annotated[
+            AsyncSession,
+            Depends(db_helper.session_getter),
+        ],
+        pk: int
+):
+    post = await posts_services.get_post(post_id=pk, session=session)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return post
+
+
 @router.post("/", status_code=201, response_model=PostSingle)
 async def create_post(
         session: Annotated[
@@ -38,8 +50,8 @@ async def create_post(
         post_create: PostCreate,
         user: User = Depends(current_active_user)
 ):
-    user = await posts_services.create_post(
+    post = await posts_services.create_post(
         session=session,
         post_create=post_create,
     )
-    return user
+    return post

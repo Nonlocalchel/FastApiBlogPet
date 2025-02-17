@@ -15,6 +15,13 @@ async def get_post_list(
     return result.all()
 
 
+async def get_post(
+        session: AsyncSession,
+        post_id: int,
+) -> Post | None:
+    return await session.get(Post, post_id)
+
+
 async def create_post(
         session: AsyncSession,
         post_create: PostCreate,
