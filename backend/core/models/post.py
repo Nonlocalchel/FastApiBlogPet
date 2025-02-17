@@ -1,8 +1,7 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, sql
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from core.models import Base
-from core.models.mixins.int_id_pk import IntIdPkMixin
 
 
 class Post(Base):
@@ -13,6 +12,8 @@ class Post(Base):
     date = Column(DateTime(timezone=True), server_default=sql.func.now())
     user = Column(Integer, ForeignKey("users.id"))
     user_id = relationship("User")
+    parent_id = Column(Integer, ForeignKey('microblog_posts.id'), nullable=True)
+    parent = relationship("Post", remote_side="Post.id", backref=backref("children"))
 
 
 posts = Post.__table__
