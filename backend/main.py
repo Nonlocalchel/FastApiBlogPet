@@ -6,7 +6,7 @@ from api import router as api_router
 from create_fast_api_app import create_app
 
 main_app = create_app(
-    create_custom_static_urls=False,
+    create_custom_static_urls=True,
 )
 
 main_app.include_router(

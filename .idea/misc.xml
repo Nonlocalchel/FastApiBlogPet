@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.12 (simple_microblog_app) (4)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (simple_microblog_app) (3)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (simple_microblog_app)" project-jdk-type="Python SDK" />
 </project>

@@ -17,11 +17,11 @@ router = APIRouter(
 
 @router.get("/", response_model=List[PostList])
 async def get_posts(
-        # session: AsyncSession = Depends(db_helper.session_getter),
-        session: Annotated[
-            AsyncSession,
-            Depends(db_helper.session_getter),
-        ],
+        session: AsyncSession = Depends(db_helper.session_getter),
+        # session: Annotated[
+        #     AsyncSession,
+        #     Depends(db_helper.session_getter),
+        # ],
 ):
     users = await posts_services.get_post_list(session=session)
     return users
