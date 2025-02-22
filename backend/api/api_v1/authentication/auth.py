@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from api.api_v1.auth.fastapi_users import fastapi_users
-from .dependencies import authentication_backend
+from api.api_v1.authentication.fastapi_users import fastapi_users
+from api.dependencies.authentication import authentication_backend
 from core.config import settings
 from core.schemas.user import (
     UserRead,

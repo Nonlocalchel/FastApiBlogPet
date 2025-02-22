@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from core.config import settings
-from .auth import router as users_router
+from .authentication import router as users_router
 from .posts import router as posts_router
 
 router = APIRouter(

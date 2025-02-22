@@ -3,7 +3,7 @@ from typing import List, Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.api_v1.auth.fastapi_users import current_active_user
+from api.api_v1.authentication.fastapi_users import current_active_user
 from core.config import settings
 from core.models import db_helper, User
 from core.schemas.post import PostList, PostCreate, PostSingle
