@@ -16,5 +16,5 @@ class PostsService:
 
     async def get_post(self, uow: IUnitOfWork, post_id: int):
         async with uow:
-            posts = await uow.posts.get_one()
+            posts = await uow.posts.get_one(post_id)
             return posts
