@@ -10,7 +10,6 @@ from core.models import (
     User
 )
 
-
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
