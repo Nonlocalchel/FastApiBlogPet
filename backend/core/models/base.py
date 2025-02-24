@@ -18,3 +18,7 @@ class Base(DeclarativeBase):
     @declared_attr.directive
     def __tablename__(cls) -> str:
         return f"{camel_case_to_snake_case(cls.__name__)}s"
+
+
+    def transform_model_to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

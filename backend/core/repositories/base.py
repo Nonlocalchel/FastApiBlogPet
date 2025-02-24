@@ -32,14 +32,19 @@ class SQLAlchemyRepository(AbstractRepository):
             self,
     ) -> Sequence[Base]:
         stmt = select(self.model).order_by(self.model.id)
-        result = await self.session.scalars(stmt)
-        return result.all()
+        res = await self.session.execute(stmt) # не self.session.scallars потому что scalars делал линивую загрузку. Это работало в случае, когда сессия была открытой до следующего запроса
+        res = [row[0].transform_model_to_dict() for row in res.all()]
+        return res
 
-    async def get_one(
-            self,
-            item_id: int,
-    ) -> Base | None:
-        return await self.session.get(self.model, item_id)
+    async def get_one(self, **filter_by):
+        stmt = select(self.model).filter_by(**filter_by)
+        res = await self.session.execute(stmt)
+        try:
+            res = res.scalar_one().transform_model_to_dict()
+            return res
+        except Exception:
+            return None
+
 
     async def add_one(
             self,

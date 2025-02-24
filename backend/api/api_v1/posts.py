@@ -27,7 +27,7 @@ async def post_single(
         uow: UOWDep,
         pk: int
 ):
-    post = await PostsService().get_post(uow, pk)
+    post = await PostsService().get_post_by_id(uow, pk)
     if post is None:
         raise HTTPException(status_code=404, detail="Post not found")
     return post

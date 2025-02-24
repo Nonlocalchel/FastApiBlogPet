@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, sql
 from sqlalchemy.orm import relationship, backref
 
 from core.models import Base
+from core.schemas.post import PostSingle
 
 
 class Post(Base):
@@ -12,8 +13,7 @@ class Post(Base):
     date = Column(DateTime(timezone=True), server_default=sql.func.now())
     user = Column(Integer, ForeignKey("users.id"))
     user_id = relationship("User")
-    parent_id = Column(Integer, ForeignKey('microblog_posts.id'), nullable=True)
-    children = relationship("Post", remote_side="Post.id", backref="parent", lazy="subquery")
+
 
 
 posts = Post.__table__
