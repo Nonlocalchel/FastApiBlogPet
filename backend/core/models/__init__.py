@@ -8,6 +8,6 @@ __all__ = (
 
 from .base import Base
 from .access_token import AccessToken
-from .services import db_helper
+from core.utils import db_helper
 from .user import User
 from .post import Post
