@@ -1,18 +1,22 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, sql
-from sqlalchemy.orm import relationship
+from sqlalchemy import String, ForeignKey, DateTime, sql, Column
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from core.models import Base
 
 
 class Post(Base):
-    __tablename__ = "microblog_posts"
+    title: Mapped[str] = mapped_column(String(100), unique=False)
+    date: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=sql.func.now())
+    body: Mapped[str] = mapped_column(
+        String(350),
+        default="",
+        server_default="",
+    )
 
-    title = Column(String)
-    text = Column(String(350))
-    date = Column(DateTime(timezone=True), server_default=sql.func.now())
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User")
-
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"), nullable=True
+    )
+    user: Mapped["User"] = relationship("User")
 
 
 posts = Post.__table__
