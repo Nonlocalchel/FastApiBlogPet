@@ -31,14 +31,11 @@ class Base(DeclarativeBase):
             # Если связь возвращает список объектов (one-to-many, many-to-many)
             elif isinstance(related_obj, list):
                 data[relation.key] = [
-                    item.transform_model_to_dict() if isinstance(item, Base) else item
-                    for item in related_obj
+                    item.transform_model_to_dict() if isinstance(item, Base) else item for item in related_obj
                 ]
             # Если связь возвращает один объект (one-to-one, many-to-one)
             else:
                 data[relation.key] = (
-                    related_obj.transform_model_to_dict()
-                    if isinstance(related_obj, Base)
-                    else related_obj
+                    related_obj.transform_model_to_dict() if isinstance(related_obj, Base) else related_obj
                 )
         return data
