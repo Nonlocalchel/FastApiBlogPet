@@ -1,4 +1,4 @@
-from pydantic import BaseModel, PostgresDsn
+from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -29,11 +29,20 @@ class ApiPrefix(BaseModel):
 
 
 class DatabaseConfig(BaseModel):
-    url: PostgresDsn
+    user: str
+    password: str
+    host: str
+    port: str
+    name: str
     echo: bool = False
     echo_pool: bool = False
     pool_size: int = 50
     max_overflow: int = 10
+
+
+    @property
+    def url(self):
+        return f'postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}'
 
     naming_convention: dict[str, str] = {
         "ix": "ix_%(column_0_label)s",
