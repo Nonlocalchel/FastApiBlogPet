@@ -4,8 +4,10 @@ from typing import Sequence
 from pydantic import BaseModel
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from core.models import Base
+from core.schemas.post import PostList
 
 
 class AbstractRepository(ABC):
@@ -28,11 +30,9 @@ class SQLAlchemyRepository(AbstractRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def get_all(
-            self,
-    ) -> Sequence[Base]:
-        stmt = select(self.model).order_by(self.model.id)
-        res = await self.session.execute(stmt) # не self.session.scallars потому что scalars делал линивую загрузку. Это работало в случае, когда сессия была открытой до следующего запроса
+    async def get_all(self):
+        stmt = select(self.model).options(selectinload(self.model.user)).order_by(self.model.id)
+        res = await self.session.execute(stmt)
         res = [row[0].transform_model_to_dict() for row in res.all()]
         return res
 
@@ -44,7 +44,6 @@ class SQLAlchemyRepository(AbstractRepository):
             return res
         except Exception:
             return None
-
 
     async def add_one(
             self,

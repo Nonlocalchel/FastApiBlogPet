@@ -1,8 +1,7 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, sql
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
 from core.models import Base
-from core.schemas.post import PostSingle
 
 
 class Post(Base):
@@ -11,8 +10,8 @@ class Post(Base):
     title = Column(String)
     text = Column(String(350))
     date = Column(DateTime(timezone=True), server_default=sql.func.now())
-    user = Column(Integer, ForeignKey("users.id"))
-    user_id = relationship("User")
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User")
 
 
 
