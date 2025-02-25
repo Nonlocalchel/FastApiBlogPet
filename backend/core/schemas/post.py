@@ -7,7 +7,7 @@ from core.schemas.user import UserRead
 
 class PostBase(BaseModel):
     title: str = ''
-    text: str = ''
+    body: str = ''
 
 
 class PostList(PostBase):
