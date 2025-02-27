@@ -15,11 +15,13 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[PostList])
+# @router.get("/")
 async def get_posts(
         uow: UOWDep,
 ):
     posts = await PostsService().get_posts(uow)
     return posts
+    # return [{"id": 1, "title": "Post 1"}]
 
 
 @router.get("/{pk}", response_model=PostSingle)
