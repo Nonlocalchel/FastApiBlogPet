@@ -16,7 +16,6 @@ class Post(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id"), nullable=True
     )
-    user: Mapped["User"] = relationship("User")
 
+    user: Mapped["User"] = relationship("User", back_populates="posts")
 
-posts = Post.__table__
