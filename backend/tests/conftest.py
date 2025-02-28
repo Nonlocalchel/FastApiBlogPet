@@ -64,9 +64,9 @@ from main import main_app
 #     main_app.dependency_overrides[db_helper.session_factory] = _get_db
 #     yield
 #     main_app.dependency_overrides.clear()
-CLEAN_TABLES = [
-    "users",
-]
+# CLEAN_TABLES = [
+#     "users",
+# ]
 
 # @pytest.fixture(scope="session", autouse=True)
 # async def run_migrations():
@@ -75,20 +75,20 @@ CLEAN_TABLES = [
 #     os.system("alembic upgrade heads")
 
 
-@pytest.fixture(scope="session")
-async def async_session_test():
-    engine = create_async_engine(
-        settings.db.url,
-        connect_args={"check_same_thread": False}
-    )
-    async_session = async_sessionmaker(
-        autocommit=False,
-        autoflush=False,
-        bind=engine,
-        class_=AsyncSession,
-        expire_on_commit=False
-    )
-    yield async_session
+# @pytest.fixture(scope="session")
+# async def async_session_test():
+#     engine = create_async_engine(
+#         settings.db.url,
+#         connect_args={"check_same_thread": False}
+#     )
+#     async_session = async_sessionmaker(
+#         autocommit=False,
+#         autoflush=False,
+#         bind=engine,
+#         class_=AsyncSession,
+#         expire_on_commit=False
+#     )
+#     yield async_session
 
 #
 # @pytest.fixture(scope="function", autouse=True)
@@ -100,22 +100,22 @@ async def async_session_test():
 #                 await session.execute(f"""TRUNCATE TABLE {table_for_cleaning};""")
 
 
-async def _get_test_db():
-    try:
-        test_engine = create_async_engine(
-            settings.db.url,
-            connect_args={"check_same_thread": False}
-        )
-        test_async_session = async_sessionmaker(
-            autocommit=False,
-            autoflush=False,
-            bind=test_engine,
-            class_=AsyncSession,
-            expire_on_commit=False
-        )
-        yield test_async_session()
-    finally:
-        pass
+# async def _get_test_db():
+#     try:
+#         test_engine = create_async_engine(
+#             settings.db.url,
+#             connect_args={"check_same_thread": False}
+#         )
+#         test_async_session = async_sessionmaker(
+#             autocommit=False,
+#             autoflush=False,
+#             bind=test_engine,
+#             class_=AsyncSession,
+#             expire_on_commit=False
+#         )
+#         yield test_async_session()
+#     finally:
+#         pass
 
 
 @pytest_asyncio.fixture
@@ -127,12 +127,12 @@ async def client():
         yield ac
 
 
-@pytest.fixture(scope="session")
-async def asyncpg_pool():
-    pool = await asyncpg.create_pool(
-        "".join(settings.TEST_DATABASE_URL.split("+asyncpg"))
-    )
-    yield pool
-    pool.close()
+# @pytest.fixture(scope="session")
+# async def asyncpg_pool():
+#     pool = await asyncpg.create_pool(
+#         "".join(settings.TEST_DATABASE_URL.split("+asyncpg"))
+#     )
+#     yield pool
+#     pool.close()
 
 
