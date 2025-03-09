@@ -17,12 +17,13 @@ from main import main_app
 @pytest_asyncio.fixture(scope="session")
 def event_loop():
     loop = asyncio.get_event_loop_policy().new_event_loop()
+    loop.run_until_complete(run_migrations())
     yield loop
     loop.run_until_complete(truncate_tables())
     loop.close()
 
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+# @pytest_asyncio.fixture(scope="session", autouse=True)
 async def run_migrations():
     os.system("alembic upgrade heads")
 
@@ -75,3 +76,23 @@ async def auth_token(client: AsyncClient, create_test_user):
     assert response.status_code == 200, response.text
     token = response.json().get("access_token")
     return token
+
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def test_create_posts(client: AsyncClient, auth_token: str):
+    last_post_id = ''
+    posts_data = [
+        {"title": "first", "body": "some text"},
+        {"title": "second", "body": "some text"},
+        {"title": "third", "body": "some text"},
+        {"title": "fourth", "body": "some text"},
+        {"title": "fifth", "body": "some text"},
+        {"title": "sixth", "body": "some text"},
+    ]
+    headers = {"Authorization": f"Bearer {auth_token}"}
+    for post_data in posts_data:
+        response = await client.post("/api/v1/posts/", json=post_data, headers=headers)
+        assert response.status_code == 201
+        last_post_id = response.json()['id']
+
+    return last_post_id
