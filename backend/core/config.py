@@ -61,7 +61,6 @@ class AccessToken(BaseModel):
     verification_token_secret: str
 
 def get_env_files_names(is_testing):
-    print(is_testing)
     env_files_templates = (".env.template", ".env")
     if is_testing:
         env_files_templates += (".env.test",)
