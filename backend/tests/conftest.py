@@ -5,13 +5,12 @@ import pytest_asyncio
 import asyncio
 
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from httpx import AsyncClient, ASGITransport
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 os.environ["TESTING"] = "1"
 
-from backend.core.config import settings
+from backend.core.utils import db_helper
 from main import main_app
 
 
@@ -19,6 +18,7 @@ from main import main_app
 def event_loop():
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
+    loop.run_until_complete(truncate_tables())
     loop.close()
 
 
@@ -33,20 +33,11 @@ CLEAN_TABLES = [
 ]
 
 
-@pytest_asyncio.fixture(scope="session")
-async def async_session_test():
-    engine = create_async_engine(settings.db.url, future=True, echo=False)
-    async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-    yield async_session
-
-
-@pytest_asyncio.fixture(scope="function", autouse=True)
-async def clean_tables(async_session_test):
-    """Clean data in all tables before running test function"""
-    async with async_session_test() as session:
+async def truncate_tables():
+    async with db_helper.session_factory() as session:
         async with session.begin():
-            for table_for_cleaning in CLEAN_TABLES:
-                await session.execute(text(f"TRUNCATE TABLE {table_for_cleaning} CASCADE;"))
+            for table in CLEAN_TABLES:
+                await session.execute(text(f"TRUNCATE TABLE {table} CASCADE;"))
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -57,13 +48,30 @@ async def client():
     ) as ac:
         yield ac
 
+
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def create_test_user(client: AsyncClient):
     registration_data = {
         "email": "test@example.com",
         "password": "password"
     }
-    response = await client.post("/api/v1/auth/register", json=registration_data)
-    # Если пользователь уже существует, можно обработать этот кейс
-    assert response.status_code in (200, 201), response.text
-    return registration_data
+    try:
+        response = await client.post("/api/v1/auth/register", json=registration_data)
+        # Если пользователь уже существует, можно обработать этот кейс
+        assert response.status_code in (200, 201), response.text
+    except AssertionError:
+        print('User is exist(past tests execute error, past data didn\'t truncate)')
+    finally:
+        return registration_data
+
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def auth_token(client: AsyncClient, create_test_user):
+    login_data = {
+        "username": create_test_user["email"],
+        "password": create_test_user["password"],
+    }
+    response = await client.post("/api/v1/auth/login", data=login_data)
+    assert response.status_code == 200, response.text
+    token = response.json().get("access_token")
+    return token
