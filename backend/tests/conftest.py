@@ -1,14 +1,11 @@
 import sys
 import os
 
-import asyncpg
 import pytest_asyncio
 import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+os.environ["TESTING"] = "1"
 
 import pytest
 from httpx import AsyncClient, ASGITransport
@@ -22,10 +19,11 @@ def event_loop():
     yield loop
     loop.close()
 
+
 @pytest.fixture(scope="session", autouse=True)
 async def run_migrations():
-#     os.system("alembic init migrations")
-#     os.system('alembic revision --autogenerate -m "test running migrations"')
+    #     os.system("alembic init migrations")
+    #     os.system('alembic revision --autogenerate -m "test running migrations"')
     os.system("alembic upgrade heads")
 
 
@@ -36,4 +34,3 @@ async def client():
             base_url="http://test",
     ) as ac:
         yield ac
-
