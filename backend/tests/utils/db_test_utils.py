@@ -1,9 +1,6 @@
-import sys
 import os
 
 from sqlalchemy import text
-
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from backend.core.utils import db_helper
 

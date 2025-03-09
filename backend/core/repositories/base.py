@@ -45,10 +45,10 @@ class SQLAlchemyRepository(AbstractRepository):
         except Exception:
             return None
 
-    # async def edit_one(self, id: int, data: dict) -> int:
-    #     stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model.id)
-    #     res = await self.session.execute(stmt)
-    #     return res.scalar_one()
+    async def edit_one(self, id: int, data: dict) -> int:
+        stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model.id)
+        res = await self.session.execute(stmt)
+        return res.scalar_one()
 
     async def add_one(
             self,

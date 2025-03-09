@@ -20,5 +20,9 @@ class PostSingle(PostList):
     pass
 
 
+class PostEdit(PostList):
+    pass
+
+
 class PostCreate(PostBase):
     model_config = ConfigDict(from_attributes=True)
