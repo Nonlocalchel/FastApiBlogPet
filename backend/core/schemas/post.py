@@ -20,7 +20,7 @@ class PostSingle(PostList):
     pass
 
 
-class PostEdit(PostList):
+class PostEdit(PostBase):
     pass
 
 

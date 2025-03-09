@@ -33,7 +33,7 @@ async def client():
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
-async def auth_token(client: AsyncClient):
+async def auth_header(client: AsyncClient):
     login = "test@example.com"
     password = "password"
     register_response = await register_user(client, (login, password))
@@ -44,24 +44,21 @@ async def auth_token(client: AsyncClient):
 
     login_response = await login_user(client, (login, password))
     assert login_response.status_code == 200, login_response.text
-    return login_response.json().get("access_token")
+    token = login_response.json().get("access_token")
+    return {"Authorization": f"Bearer {token}"}
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
-async def test_create_posts(client: AsyncClient, auth_token: str):
+async def last_post(client: AsyncClient, auth_header: dict):
     last_post_id = ''
     posts_data = [
-        {"title": "first", "body": "some text"},
-        {"title": "second", "body": "some text"},
-        {"title": "third", "body": "some text"},
-        {"title": "fourth", "body": "some text"},
-        {"title": "fifth", "body": "some text"},
-        {"title": "sixth", "body": "some text"},
+        {"title": "first", "body": "some text"}, {"title": "second", "body": "some text"},
+        {"title": "third", "body": "some text"}, {"title": "fourth", "body": "some text"},
+        {"title": "fifth", "body": "some text"}, {"title": "sixth", "body": "some text"},
     ]
-    headers = {"Authorization": f"Bearer {auth_token}"}
     for post_data in posts_data:
-        response = await client.post("/api/v1/posts/", json=post_data, headers=headers)
+        response = await client.post("/api/v1/posts/", json=post_data, headers=auth_header)
         assert response.status_code == 201
         last_post_id = response.json()['id']
 
-    return last_post_id
+    return int(last_post_id)

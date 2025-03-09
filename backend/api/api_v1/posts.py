@@ -45,33 +45,22 @@ async def create_post(
     return post
 
 
-@router.put("/{pk}/")
+@router.patch("/{pk}")
 async def update_product(
         uow: UOWDep,
         post: PostEdit,
         pk: int,
         user: User = Depends(current_active_user)
 ):
-    post = await PostsService().update_post(uow, pk)
+    post = await PostsService().update_post(uow, pk, post)
     return post
 
 
-@router.patch("/{pk}/")
-async def update_product_partial(
-        uow: UOWDep,
-        post: PostEdit,
-        pk: int,
-        user: User = Depends(current_active_user)
-):
-    post = await PostsService().update_post(uow, pk, partial=True)
-    return post
-
-
-@router.delete("/{pk}/", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{pk}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_product(
         uow: UOWDep,
         pk: int,
         user: User = Depends(current_active_user)
 ) -> None:
-    post = await PostsService().delete_post(uow, pk, partial=True)
+    post = await PostsService().delete_post(uow, pk)
     return post
