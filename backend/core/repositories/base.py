@@ -54,7 +54,7 @@ class SQLAlchemyRepository(AbstractRepository):
         return res.scalar_one()
 
     async def edit_one(self, post_id: int, data: dict) -> int:
-        stmt = update(self.model).values(**data).filter_by(id=post_id).returning(self.model.id)
+        stmt = update(self.model).values(**data).filter_by(id=post_id).returning(self.model)
         res = await self.session.execute(stmt)
         return res.scalar_one()
 
@@ -63,5 +63,5 @@ class SQLAlchemyRepository(AbstractRepository):
             post_id: int,
     ) -> bool:
         stmt = delete(self.model).where(self.model.id == post_id)
-        await self.session.execute(stmt)
+        res = await self.session.execute(stmt)
         return True
