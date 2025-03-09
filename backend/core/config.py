@@ -1,3 +1,5 @@
+import os
+
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -58,10 +60,18 @@ class AccessToken(BaseModel):
     reset_password_token_secret: str
     verification_token_secret: str
 
+def get_env_files_names(is_testing):
+    print(is_testing)
+    env_files_templates = (".env.template", ".env")
+    if is_testing:
+        env_files_templates += (".env.test",)
+
+    return env_files_templates
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=(".env.template", ".env"),
+        env_file=get_env_files_names(os.getenv("TESTING")),
         case_sensitive=False,
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG__",
