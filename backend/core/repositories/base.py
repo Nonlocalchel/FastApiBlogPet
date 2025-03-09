@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Sequence
 
 from pydantic import BaseModel
-from sqlalchemy import insert, select, update
+from sqlalchemy import insert, select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -61,7 +61,7 @@ class SQLAlchemyRepository(AbstractRepository):
     async def delete_one(
             self,
             post_id: int,
-    ) -> Base:
-        await self.session.delete(post_id)
-        await self.session.commit()
-        return post_id
+    ) -> bool:
+        stmt = delete(self.model).where(self.model.id == post_id)
+        await self.session.execute(stmt)
+        return True

@@ -29,10 +29,6 @@ class PostsService:
             return post
 
     async def delete_post(self, uow: IUnitOfWork, post_id: int):
-        pass
-        # async with uow:
-        #     delete_one(
-        #         self,
-        #         post_id: int,
-        #     ):
-        #     pass
+        async with uow:
+            is_delete = await uow.posts.delete_one(post_id)
+            return is_delete
