@@ -3,14 +3,14 @@ import os
 
 import pytest_asyncio
 import asyncio
-
-from sqlalchemy import text
 from httpx import AsyncClient, ASGITransport
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 os.environ["TESTING"] = "1"
 
-from backend.core.utils import db_helper
+from backend.tests.utils.db_test_utils import run_migrations, truncate_tables
+from backend.tests.utils.user_tests_utils import register_user, login_user
+
 from main import main_app
 
 
@@ -23,24 +23,6 @@ def event_loop():
     loop.close()
 
 
-# @pytest_asyncio.fixture(scope="session", autouse=True)
-async def run_migrations():
-    os.system("alembic upgrade heads")
-
-
-CLEAN_TABLES = [
-    "posts",
-    "users",
-]
-
-
-async def truncate_tables():
-    async with db_helper.session_factory() as session:
-        async with session.begin():
-            for table in CLEAN_TABLES:
-                await session.execute(text(f"TRUNCATE TABLE {table} CASCADE;"))
-
-
 @pytest_asyncio.fixture(scope="session")
 async def client():
     async with AsyncClient(
@@ -51,31 +33,18 @@ async def client():
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
-async def create_test_user(client: AsyncClient):
-    registration_data = {
-        "email": "test@example.com",
-        "password": "password"
-    }
+async def auth_token(client: AsyncClient):
+    login = "test@example.com"
+    password = "password"
+    register_response = await register_user(client, (login, password))
     try:
-        response = await client.post("/api/v1/auth/register", json=registration_data)
-        # Если пользователь уже существует, можно обработать этот кейс
-        assert response.status_code in (200, 201), response.text
+        assert register_response.status_code in (200, 201), register_response.text
     except AssertionError:
-        print('User is exist(past tests execute error, past data didn\'t truncate)')
-    finally:
-        return registration_data
+        print('User is exist')
 
-
-@pytest_asyncio.fixture(scope="session", autouse=True)
-async def auth_token(client: AsyncClient, create_test_user):
-    login_data = {
-        "username": create_test_user["email"],
-        "password": create_test_user["password"],
-    }
-    response = await client.post("/api/v1/auth/login", data=login_data)
-    assert response.status_code == 200, response.text
-    token = response.json().get("access_token")
-    return token
+    login_response = await login_user(client, (login, password))
+    assert login_response.status_code == 200, login_response.text
+    return login_response.json().get("access_token")
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
