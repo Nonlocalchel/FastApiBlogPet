@@ -15,8 +15,9 @@ class PostsService:
             return posts
 
     async def add_post(self, uow: IUnitOfWork, post: PostCreate):
+        posts_dict = post.model_dump()
         async with uow:
-            post_id = await uow.posts.add_one(post)
+            post_id = await uow.posts.add_one(posts_dict)
             await uow.commit()
             return post_id
 
@@ -26,3 +27,12 @@ class PostsService:
             post = await uow.posts.edit_one(post_id, posts_dict)
             await uow.commit()
             return post
+
+    async def delete_post(self, uow: IUnitOfWork, post_id: int):
+        pass
+        # async with uow:
+        #     delete_one(
+        #         self,
+        #         post_id: int,
+        #     ):
+        #     pass

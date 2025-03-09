@@ -47,14 +47,21 @@ class SQLAlchemyRepository(AbstractRepository):
 
     async def add_one(
             self,
-            data: BaseModel,
+            data: dict,
     ) -> Base:
-        item = self.model(**data.model_dump())
-        self.session.add(item)
-        await self.session.commit()
-        return item
+        stmt = insert(self.model).values(**data).returning(self.model)
+        res = await self.session.execute(stmt)
+        return res.scalar_one()
 
     async def edit_one(self, post_id: int, data: dict) -> int:
         stmt = update(self.model).values(**data).filter_by(id=post_id).returning(self.model.id)
         res = await self.session.execute(stmt)
         return res.scalar_one()
+
+    async def delete_one(
+            self,
+            post_id: int,
+    ) -> Base:
+        await self.session.delete(post_id)
+        await self.session.commit()
+        return post_id

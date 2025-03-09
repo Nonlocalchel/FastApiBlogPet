@@ -35,7 +35,7 @@ async def post_single(
     return post
 
 
-@router.post("/", status_code=201, response_model=PostSingle)
+@router.post("/", status_code=201)
 async def create_post(
         uow: UOWDep,
         post: PostCreate,
