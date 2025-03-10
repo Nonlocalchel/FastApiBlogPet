@@ -53,6 +53,8 @@ async def update_product(
         user: User = Depends(current_active_user)
 ):
     post = await PostsService().update_post(uow, pk, post)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
     return post
 
 
@@ -63,4 +65,6 @@ async def delete_product(
         user: User = Depends(current_active_user)
 ) -> None:
     post = await PostsService().delete_post(uow, pk)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
     return post

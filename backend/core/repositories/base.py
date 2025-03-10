@@ -56,12 +56,17 @@ class SQLAlchemyRepository(AbstractRepository):
     async def edit_one(self, post_id: int, data: dict) -> int:
         stmt = update(self.model).values(**data).filter_by(id=post_id).returning(self.model)
         res = await self.session.execute(stmt)
-        return res.scalar_one()
+        row = res.first()
+        if row is not None:
+            return row[0]
+        return None
 
     async def delete_one(
             self,
             post_id: int,
-    ) -> bool:
+    ) -> bool | None:
         stmt = delete(self.model).where(self.model.id == post_id)
         res = await self.session.execute(stmt)
+        if res.rowcount == 0:
+            return None  # Нет записи для удаления
         return True

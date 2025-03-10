@@ -45,6 +45,22 @@ async def test_update_post(client: AsyncClient, auth_header: dict, last_post: in
 
 
 @pytest.mark.asyncio(loop_scope="function")
+async def test_update_post_fail(client: AsyncClient, auth_header: dict, last_post: int):
+    change_post_data = {
+        "title": "ss",
+        "body": ""
+    }
+    response = await client.patch(f"/api/v1/posts/{last_post + 31}", json=change_post_data, headers=auth_header)
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio(loop_scope="function")
 async def test_delete_post(client: AsyncClient, auth_header: dict, last_post: int):
     response = await client.delete(f"/api/v1/posts/{last_post}", headers=auth_header)
     assert response.status_code == 204
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_delete_post_fail(client: AsyncClient, auth_header: dict, last_post: int):
+    response = await client.delete(f"/api/v1/posts/{last_post+11}", headers=auth_header)
+    assert response.status_code == 404
