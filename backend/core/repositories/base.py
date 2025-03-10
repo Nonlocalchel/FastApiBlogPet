@@ -68,5 +68,5 @@ class SQLAlchemyRepository(AbstractRepository):
         stmt = delete(self.model).where(self.model.id == post_id)
         res = await self.session.execute(stmt)
         if res.rowcount == 0:
-            return None  # Нет записи для удаления
+            return None
         return True
