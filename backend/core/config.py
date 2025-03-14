@@ -3,6 +3,9 @@ import os
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from envparse import Env
+
+
 
 class RunConfig(BaseModel):
     host: str = "0.0.0.0"
@@ -61,7 +64,7 @@ class AccessToken(BaseModel):
     verification_token_secret: str
 
 def get_env_files_names(is_testing):
-    env_files_templates = (".env.template", ".env")
+    env_files_templates = (".env.template", ".env", ".env.prod")
     if is_testing:
         env_files_templates += (".env.test",)
 

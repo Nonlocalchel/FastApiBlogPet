@@ -2,20 +2,20 @@ services:
   backend:
     container_name: backend
     build:
-      context: ./backend
-    expose:
-      - 8000
-    env_file:
-      - backend/.env
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8001:8000"
+#    command: sh -c 'echo 123; echo 456; poetry run python main.py'
     depends_on:
       - pg
 
   pg:
     container_name: database
     image: postgres:17.4-alpine
-    env_file:
-      - backend/.env
     environment:
-      POSTGRES_DB: APP_CONFIG__DB__NAME
-      POSTGRES_USER: APP_CONFIG__DB__USER
-      POSTGRES_PASSWORD: APP_CONFIG__DB__PASSWORD
+      POSTGRES_DB: shop
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "46003:5432"

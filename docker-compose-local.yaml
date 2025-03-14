@@ -1,21 +1,17 @@
 services:
   pg:
     image: postgres
-    env_file:
-      - backend/.env
     environment:
-      POSTGRES_DB: APP_CONFIG__DB__NAME
-      POSTGRES_USER: APP_CONFIG__DB__USER
-      POSTGRES_PASSWORD: APP_CONFIG__DB__PASSWORD
+      POSTGRES_DB: shop
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
     ports:
       - "46003:5432"
   pg_test:
     image: postgres
-    env_file:
-      - backend/.env.test
     environment:
-      POSTGRES_DB: APP_CONFIG__DB__NAME
-      POSTGRES_USER: APP_CONFIG__DB__USER
-      POSTGRES_PASSWORD: APP_CONFIG__DB__PASSWORD
+      POSTGRES_DB: shop_test
+      POSTGRES_USER: user_test
+      POSTGRES_PASSWORD: password_test
     ports:
       - "46004:5432"
