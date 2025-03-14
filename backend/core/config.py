@@ -6,7 +6,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from envparse import Env
 
 
-
 class RunConfig(BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
@@ -44,9 +43,12 @@ class DatabaseConfig(BaseModel):
     pool_size: int = 50
     max_overflow: int = 10
 
-
     @property
     def url(self):
+        is_testing = os.getenv("TESTING")
+        if is_testing:
+            return f'postgresql+asyncpg://{self.user}_test:{self.password}_test@{self.host}:{int(self.port) + 1}/{self.name}_test'
+
         return f'postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}'
 
     naming_convention: dict[str, str] = {
@@ -63,17 +65,10 @@ class AccessToken(BaseModel):
     reset_password_token_secret: str
     verification_token_secret: str
 
-def get_env_files_names(is_testing):
-    env_files_templates = (".env.template", ".env", ".env.prod")
-    if is_testing:
-        env_files_templates += (".env.test",)
-
-    return env_files_templates
-
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=get_env_files_names(os.getenv("TESTING")),
+        env_file=(".env.template", ".env", ".env.prod"),
         case_sensitive=False,
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG__",
