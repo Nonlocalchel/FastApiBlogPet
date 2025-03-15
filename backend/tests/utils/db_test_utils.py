@@ -9,6 +9,10 @@ async def run_migrations():
     os.system("alembic upgrade heads")
 
 
+async def remove_migrations():
+    os.system("alembic downgrade base")
+
+
 CLEAN_TABLES = [
     "posts",
     "users",

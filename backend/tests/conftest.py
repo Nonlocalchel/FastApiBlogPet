@@ -8,7 +8,7 @@ from httpx import AsyncClient, ASGITransport
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 os.environ["TESTING"] = "1"
 
-from backend.tests.utils.db_test_utils import run_migrations, truncate_tables
+from backend.tests.utils.db_test_utils import run_migrations, remove_migrations, truncate_tables
 from backend.tests.utils.user_tests_utils import register_user, login_user
 
 from main import main_app
@@ -19,7 +19,7 @@ def event_loop():
     loop = asyncio.get_event_loop_policy().new_event_loop()
     loop.run_until_complete(run_migrations())
     yield loop
-    loop.run_until_complete(truncate_tables())
+    loop.run_until_complete(remove_migrations()) #если ошибка миграций то заменить на truncate_tables
     loop.close()
 
 
