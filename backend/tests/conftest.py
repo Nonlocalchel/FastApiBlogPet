@@ -8,7 +8,7 @@ from httpx import AsyncClient, ASGITransport
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 os.environ["TESTING"] = "1"
 
-from backend.tests.utils.db_test_utils import run_migrations, remove_migrations, truncate_tables
+from backend.tests.utils.db_test_utils import run_migrations, remove_migrations
 from backend.tests.utils.user_tests_utils import register_user, login_user
 
 from main import main_app

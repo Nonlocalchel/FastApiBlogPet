@@ -14,7 +14,9 @@ fi
 set -e
 
 echo "Применение миграций..."
-poetry run alembic upgrade head
+alembic upgrade head
 
 echo "Запуск приложения..."
-exec poetry run python main.py && "$@"
+python main.py
+
+exec "$@"
