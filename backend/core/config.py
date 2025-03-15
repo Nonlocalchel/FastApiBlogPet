@@ -46,7 +46,8 @@ class DatabaseConfig(BaseModel):
         is_testing = os.getenv("TESTING")
         if is_testing:
             if self.host != 'localhost':
-                self.host += '_test'
+                return f'postgresql+asyncpg://{self.user}_test:{self.password}_test@{self.host}_test:{self.port}/{self.name}_test'
+
             return f'postgresql+asyncpg://{self.user}_test:{self.password}_test@{self.host}:{int(self.port) + 1}/{self.name}_test'
 
         return f'postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}'
