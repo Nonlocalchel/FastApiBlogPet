@@ -6,7 +6,6 @@ services:
       dockerfile: backend/Dockerfile
     ports:
       - "8001:8000"
-#    command: sh -c 'echo 123; echo 456; poetry run python main.py'
     depends_on:
       - pg
 
@@ -17,5 +16,3 @@ services:
       POSTGRES_DB: shop
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-    ports:
-      - "46003:5432"
