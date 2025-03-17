@@ -1,34 +1,29 @@
+from core.repositories.base import AbstractRepository
 from core.schemas.post import PostCreate, PostEdit
-from core.utils.unit_of_work import IUnitOfWork
 
 
 class PostsService:
+    def __init__(self, users_repo: AbstractRepository):
+        self.posts_repo: AbstractRepository = users_repo()
 
-    async def get_posts(self, uow: IUnitOfWork):
-        async with uow:
-            posts = await uow.posts.get_all()
-            return posts
+    async def get_posts(self):
+        posts = await self.posts_repo.get_all()
+        return posts
 
-    async def get_post_by_id(self, uow: IUnitOfWork, post_id: int):
-        async with uow:
-            posts = await uow.posts.get_one(id=post_id)
-            return posts
+    async def get_post_by_id(self, post_id: int):
+        posts = await self.posts_repo.get_one(id=post_id)
+        return posts
 
-    async def add_post(self, uow: IUnitOfWork, post: PostCreate):
+    async def add_post(self, post: PostCreate):
         posts_dict = post.model_dump()
-        async with uow:
-            post_id = await uow.posts.add_one(posts_dict)
-            await uow.commit()
-            return post_id
+        post_id = await self.posts_repo.add_one(posts_dict)
+        return post_id
 
-    async def update_post(self, uow: IUnitOfWork, post_id: int, post: PostEdit):
+    async def update_post(self,post_id: int, post: PostEdit):
         posts_dict = post.model_dump()
-        async with uow:
-            post = await uow.posts.edit_one(post_id, posts_dict)
-            await uow.commit()
-            return post
+        post = await self.posts_repo.edit_one(post_id, posts_dict)
+        return post
 
-    async def delete_post(self, uow: IUnitOfWork, post_id: int):
-        async with uow:
-            is_delete = await uow.posts.delete_one(post_id)
-            return is_delete
+    async def delete_post(self, post_id: int):
+        is_delete = await self.posts_repo.delete_one(post_id)
+        return is_delete
