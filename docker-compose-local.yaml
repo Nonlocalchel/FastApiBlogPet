@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: ${APP_CONFIG__DB__USER}
       POSTGRES_PASSWORD: ${APP_CONFIG__DB__PASSWORD}
     ports:
-      - "46003:${APP_CONFIG__DB__PORT}"
+      - "${APP_CONFIG__DB__PORT}:${APP_CONFIG__DB__PORT}"
   pg_test:
     image: postgres:17.4-alpine
     environment:
@@ -14,5 +14,5 @@ services:
       POSTGRES_USER: ${APP_CONFIG__DB__USER}_test
       POSTGRES_PASSWORD: ${APP_CONFIG__DB__PASSWORD}_test
     ports:
-      - "46004:${APP_CONFIG__DB__PORT}"
+      - "5433:${APP_CONFIG__DB__PORT}"
 
