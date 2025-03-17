@@ -1,13 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import Sequence
 
-from pydantic import BaseModel
 from sqlalchemy import insert, select, update, delete
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from core.models import Base
-from core.schemas.post import PostList
 from core.utils.db_session import session_factory
 
 
