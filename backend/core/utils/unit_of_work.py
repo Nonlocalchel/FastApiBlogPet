@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from core.repositories.posts import PostsRepository
-from core.utils import db_helper
+from core.utils.db_session import session_factory
 
 
 # https://github1s.com/cosmicpython/code/tree/chapter_06_uow
@@ -30,7 +30,7 @@ class IUnitOfWork(ABC):
 
 class UnitOfWork:
     def __init__(self):
-        self.session_factory = db_helper.session_factory
+        self.session_factory = session_factory
 
     async def __aenter__(self):
         self.session = self.session_factory()

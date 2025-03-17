@@ -10,7 +10,7 @@ from fastapi.openapi.docs import (
 from fastapi.responses import ORJSONResponse
 from starlette.responses import HTMLResponse
 
-from core.models import db_helper
+from core.utils.db_session import engine
 
 
 @asynccontextmanager
@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # startup
     yield
     # shutdown
-    await db_helper.dispose()
+    await engine.dispose()
 
 
 def register_static_docs_routes(app: FastAPI) -> None:
