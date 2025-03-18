@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from core.repositories.posts import PostsRepository
+from repositories.posts import PostsRepository
 from services.posts import PostsService
 
 

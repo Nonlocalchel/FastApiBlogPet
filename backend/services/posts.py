@@ -1,5 +1,5 @@
-from core.repositories.base import AbstractRepository
-from core.schemas.post import PostCreate, PostEdit
+from repositories import AbstractRepository
+from core.schemas.posts import PostCreate, PostEdit
 
 
 class PostsService:

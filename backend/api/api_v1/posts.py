@@ -6,7 +6,7 @@ from starlette import status
 from api.api_v1.authentication.fastapi_users import CurrentActiveUserDep
 from api.dependencies.services import PostsServiceDep
 from core.config import settings
-from core.schemas.post import PostList, PostCreate, PostSingle, PostEdit
+from core.schemas.posts import PostList, PostCreate, PostSingle, PostEdit
 
 router = APIRouter(
     prefix=settings.api.v1.posts,

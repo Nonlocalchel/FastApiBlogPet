@@ -9,7 +9,7 @@ from api.api_v1.authentication.fastapi_users import (
 )
 from core.config import settings
 from core.models import User
-from core.schemas.user import UserRead
+from core.schemas.users import UserRead
 
 router = APIRouter(
     prefix=settings.api.v1.messages,

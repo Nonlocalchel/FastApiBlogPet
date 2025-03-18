@@ -7,7 +7,7 @@ from api.dependencies.authentication import get_user_manager
 from core.authentication.user_manager import UserManager
 from core.models import User
 
-from core.schemas.user import UserCreate
+from core.schemas.users import UserCreate
 from core.utils.db_session import session_factory
 
 # from fastapi_users.exceptions import UserAlreadyExists

@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import datetime
 
-from core.schemas.user import UserRead
+from core.schemas.users import UserRead
 
 
 class PostBase(BaseModel):
