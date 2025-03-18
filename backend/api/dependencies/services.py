@@ -2,8 +2,8 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from repositories.posts import PostsRepository
-from services.posts import PostsService
+from repositories import PostsRepository
+from services import PostsService
 
 
 def posts_service():

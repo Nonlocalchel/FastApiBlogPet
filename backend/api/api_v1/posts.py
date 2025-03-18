@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from starlette import status
 
-from api.api_v1.authentication.fastapi_users import CurrentActiveUserDep
+from api.dependencies.current_user import CurrentActiveUserDep
 from api.dependencies.services import PostsServiceDep
 from core.config import settings
 from core.schemas.posts import PostList, PostCreate, PostSingle, PostEdit
