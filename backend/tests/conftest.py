@@ -5,9 +5,12 @@ import pytest_asyncio
 import asyncio
 from httpx import AsyncClient, ASGITransport
 
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 os.environ["TESTING"] = "1"
 
+from backend.core.schemas.posts import PostCreate
+from backend.api.dependencies.services import posts_service
 from backend.tests.utils.db_test_utils import run_migrations, remove_migrations
 from backend.tests.utils.user_tests_utils import register_user, login_user
 
@@ -50,6 +53,7 @@ async def auth_header(client: AsyncClient):
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def last_post(client: AsyncClient, auth_header: dict):
+    posts_service_obj = posts_service()
     last_post_id = ''
     posts_data = [
         {"title": "first", "body": "some text"}, {"title": "second", "body": "some text"},
@@ -57,8 +61,9 @@ async def last_post(client: AsyncClient, auth_header: dict):
         {"title": "fifth", "body": "some text"}, {"title": "sixth", "body": "some text"},
     ]
     for post_data in posts_data:
-        response = await client.post("/api/v1/posts/", json=post_data, headers=auth_header)
-        assert response.status_code == 201
-        last_post_id = response.json()['id']
+        post = await posts_service_obj.add_post(PostCreate(**post_data))
+        post_id = post.id
+        assert type(post_id) == int
+        last_post_id = post.id
 
     return int(last_post_id)
